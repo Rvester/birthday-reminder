@@ -3,3 +3,5 @@
 
 # Virtual environment directory
 .venv/
+
+._pycache_/

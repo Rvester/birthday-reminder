@@ -1,21 +1,27 @@
-from twilio.rest import Client
-from dotenv import load_dotenv
 import os
-from coupon_generator import generate_coupon
+import vonage
+from dotenv import load_dotenv
 
 load_dotenv()
-TWILIO_SID = os.getenv("TWILIO_SID")
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-TWILIO_PHONE = os.getenv("TWILIO_PHONE")
 
-def send_birthday_sms(phone, name):
-    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
-    coupon = generate_coupon()
+def send_birthday_sms(phone_number, name, coupon):
+    client = vonage.Client(
+        key=os.getenv("VONAGE_API_KEY"), 
+        secret=os.getenv("VONAGE_API_SECRET")
+    )
+    sms = vonage.Sms(client)
     
-    message = client.messages.create(
-        body=f"Dear {name},\nHappy birthday!🎂🎇❤️ We hope you have a great day. As a gift, we're offering you a special discount code: {coupon}.\nBest regards,\nYour team",
-        from_=TWILIO_PHONE,
-        to=phone
+    message_text = f"Hi {name}! Happy Birthday 🎉! Enjoy a 20% discount with coupon code {coupon}. Have a great day!"
+
+    response = sms.send_message(
+        {
+            "from": os.getenv("VONAGE_PHONE_NUMBER"),
+            "to": phone_number,
+            "text": message_text,
+        }
     )
     
-    print(f"SMS sent to {name} at {phone} succesfully!")
+    if response["messages"][0]["status"] == "0":
+        print("Message sent successfully.")
+    else:
+        print(f"Message failed with error: {response['messages'][0]['error-text']}")

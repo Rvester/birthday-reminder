@@ -1,10 +1,14 @@
-import pandas as pd
+import csv
 from datetime import datetime
 
-
 def get_today_birthdays(file_path):
-    birthdays = pd.read_csv(file_path)
-    today = datetime.today().strftime('%m-%d-%Y')
-    birthdays['birthday'] = pd.to_datetime(birthdays['birthday']).dt.strftime('%m-%d-%Y')
-
-    return birthdays[birthdays['birthday'] == today]
+    today = datetime.today().strftime('%m-%d')
+    birthdays_today = []
+    
+    with open(file_path, mode='r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            if row['birthday'] == today:
+                birthdays_today.append(row)
+                
+    return birthdays_today

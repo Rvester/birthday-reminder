@@ -2,9 +2,10 @@ import os
 import vonage
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
-def send_birthday_sms(phone_number, name, coupon):
+def send_birthday_sms(phone, name, coupon):
     client = vonage.Client(
         key=os.getenv("VONAGE_API_KEY"), 
         secret=os.getenv("VONAGE_API_SECRET")
@@ -15,8 +16,8 @@ def send_birthday_sms(phone_number, name, coupon):
 
     response = sms.send_message(
         {
-            "from": os.getenv("VONAGE_PHONE_NUMBER"),
-            "to": phone_number,
+            "from": os.getenv("VONAGE_PHONE"),
+            "to": phone,
             "text": message_text,
         }
     )
@@ -25,3 +26,4 @@ def send_birthday_sms(phone_number, name, coupon):
         print("Message sent successfully.")
     else:
         print(f"Message failed with error: {response['messages'][0]['error-text']}")
+

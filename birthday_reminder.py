@@ -12,10 +12,10 @@ today_birthdays = get_today_birthdays(file_path)
 for person in today_birthdays:
     name = person['name']
     email = person['email']
-    phone_number = person['phone']  
+    phone_number = person['phone_number']  
+    coupon = generate_coupon()
     
    
-    coupon = generate_coupon()
     
     
     if email:
